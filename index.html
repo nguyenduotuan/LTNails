@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L&amp;T Nails</title>
+  <link rel="stylesheet" href="src/styles/main.css">
+</head>
+<body class="home" data-page="home" data-root="">
+  <header id="site-header" class="site-header"></header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="hero.eyebrow"></p>
+          <h1 data-shop-name></h1>
+          <p class="hero-tagline" data-i18n="hero.tagline"></p>
+          <div class="btn-row">
+            <a class="btn" data-book data-i18n="book.cta" href="#" hidden></a>
+            <a class="btn" data-call data-i18n="hero.cta" href="#"></a>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <span class="nail n1"></span>
+          <span class="nail n2"></span>
+          <span class="nail n3"></span>
+          <span class="nail n4"></span>
+          <span class="nail n5"></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="notice" class="notice" hidden>
+      <div class="container">
+        <h2 data-i18n="notice.title"></h2>
+        <p id="notice-text"></p>
+      </div>
+    </section>
+
+    <button type="button" id="gallery-banner" class="gallery-banner">
+      <span data-i18n="gallery.title"></span>
+    </button>
+    <div id="gallery-overlay" class="overlay" hidden>
+      <div class="overlay-panel" role="dialog" aria-modal="true" aria-labelledby="gallery-title">
+        <button type="button" class="overlay-close" data-i18n-label="gallery.close">×</button>
+        <h2 id="gallery-title" data-i18n="gallery.title"></h2>
+        <p id="gallery-empty" data-i18n="gallery.empty"></p>
+        <div id="gallery-grid" class="gallery-grid"></div>
+      </div>
+    </div>
+
+    <section id="reviews" class="section tinted" hidden>
+      <div class="container">
+        <h2 class="section-title" data-i18n="reviews.title"></h2>
+        <div class="slider">
+          <button type="button" id="review-prev" class="slider-btn" data-i18n-label="reviews.prev">‹</button>
+          <div class="slider-window"><div id="review-track" class="slider-track"></div></div>
+          <button type="button" id="review-next" class="slider-btn" data-i18n-label="reviews.next">›</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container about-row">
+        <h2 class="section-title" data-i18n="about.title"></h2>
+        <p class="about-text" data-i18n="about.text"></p>
+      </div>
+    </section>
+
+    <section class="section tinted">
+      <div class="container">
+        <h2 class="section-title" data-i18n="contact.title"></h2>
+        <div class="contact" data-contact></div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="site-footer" class="site-footer"></footer>
+
+  <script src="src/scripts/translations.js"></script>
+  <script src="src/scripts/common.js"></script>
+  <script src="src/scripts/home.js"></script>
+</body>
+</html>

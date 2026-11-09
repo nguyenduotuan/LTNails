@@ -1,0 +1,16 @@
+[
+  {
+    "category": { "de": "Maniküre", "en": "Manicure", "vi": "Làm móng tay" },
+    "items": [
+      { "name": { "de": "Klassische Maniküre", "en": "Classic manicure", "vi": "Làm móng cơ bản" }, "price": "00 €" },
+      { "name": { "de": "Gel-Lack", "en": "Gel polish", "vi": "Sơn gel" }, "price": "00 €" }
+    ]
+  },
+  {
+    "category": { "de": "Nagelmodellage", "en": "Nail extensions", "vi": "Nối móng" },
+    "items": [
+      { "name": { "de": "Neumodellage", "en": "New set", "vi": "Bộ móng mới" }, "price": "00 €" },
+      { "name": { "de": "Auffüllen", "en": "Refill", "vi": "Đắp lại móng" }, "price": "00 €" }
+    ]
+  }
+]

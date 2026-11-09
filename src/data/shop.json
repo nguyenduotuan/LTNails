@@ -1,0 +1,16 @@
+{
+  "name": "L&T Nails",
+  "phone": "0911 63328397",
+  "address": ["Bucher Straße 61", "90419 Nürnberg"],
+  "openingHours": [
+    "09:30 – 19:30",
+    "09:30 – 19:30",
+    "09:30 – 19:30",
+    "09:30 – 19:30",
+    "09:30 – 19:30",
+    "09:30 – 19:30",
+    null
+  ],
+  "social": { "instagram": "https://www.instagram.com/lt.nails.nurnberg/" },
+  "bookingUrl": "https://www.planity.com/de-DE/lt-nails-90419-nurnberg"
+}
