@@ -1,124 +1,220 @@
-// Homepage: announcement, gallery banner + overlay, review slider.
-document.addEventListener("site:ready", () => {
-  initAnnouncement();
-  initGallery();
-  initReviews();
-});
+(function () {
+  "use strict";
 
-async function initAnnouncement() {
-  const section = document.getElementById("notice");
-  const text = document.getElementById("notice-text");
-  try {
-    const data = await Site.loadJSON("announcement");
-    const render = () => {
-      const msg = Site.pick(data.text).trim();
-      section.hidden = !msg;
-      text.textContent = msg;
-    };
-    render();
-    Site.onLangChange(render);
-  } catch (e) {
-    section.hidden = true;
+  var App = window.App;
+
+  function initHero() {
+    App.fetchShop().then(function (shop) {
+      var nameEl = document.getElementById("hero-name");
+      if (nameEl) nameEl.textContent = shop.name;
+      var callBtn = document.getElementById("hero-call");
+      if (callBtn) callBtn.href = "tel:" + shop.phone.replace(/[^\d+]/g, "");
+      var bookBtn = document.getElementById("hero-book");
+      if (bookBtn && shop.bookingUrl && shop.bookingUrl.indexOf("https://") === 0) {
+        bookBtn.hidden = false;
+        bookBtn.href = shop.bookingUrl;
+        if (callBtn) callBtn.classList.add("btn-outline");
+      }
+    });
   }
-}
 
-async function initGallery() {
-  const banner = document.getElementById("gallery-banner");
-  const overlay = document.getElementById("gallery-overlay");
-  const grid = document.getElementById("gallery-grid");
-  const empty = document.getElementById("gallery-empty");
-  let data = { cover: "", images: [] };
-  try { data = await Site.loadJSON("gallery"); } catch (e) { console.error(e); }
+  function initAnnouncement() {
+    var section = document.getElementById("announcement");
+    var msg = document.getElementById("announcement-text");
+    if (!section || !msg) return;
+    App.fetchJSON("src/data/announcement.json")
+      .then(function (data) {
+        function update() {
+          var txt = App.text(data && data.text);
+          if (txt && txt.trim()) {
+            msg.textContent = txt;
+            section.hidden = false;
+          } else {
+            section.hidden = true;
+          }
+        }
+        update();
+        document.addEventListener("langchange", update);
+      })
+      .catch(function () {
+        section.hidden = true;
+      });
+  }
 
-  if (data.cover) banner.style.backgroundImage = `url("${encodeURI(data.cover)}")`;
-  data.images.forEach((src) => {
-    const img = document.createElement("img");
-    img.src = src;
-    img.alt = "";
-    img.loading = "lazy";
-    grid.appendChild(img);
-  });
-  empty.hidden = data.images.length > 0;
+  function initGallery() {
+    var banner = document.getElementById("gallery-banner");
+    var bannerBg = document.getElementById("banner-bg");
+    var overlay = document.getElementById("gallery-overlay");
+    var grid = document.getElementById("overlay-grid");
+    var emptyMsg = document.getElementById("overlay-empty");
+    var closeBtn = document.getElementById("overlay-close");
+    if (!banner || !overlay) return;
+    var images = [];
 
-  const open = () => { overlay.hidden = false; document.body.classList.add("no-scroll"); };
-  const close = () => { overlay.hidden = true; document.body.classList.remove("no-scroll"); };
-  banner.addEventListener("click", open);
-  overlay.querySelector(".overlay-close").addEventListener("click", close);
-  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !overlay.hidden) close(); });
-}
+    App.fetchJSON("src/data/gallery.json")
+      .then(function (data) {
+        images = (data && data.images) || [];
+        if (data && data.cover && bannerBg) {
+          bannerBg.style.backgroundImage = "url('" + App.root() + data.cover + "')";
+          banner.classList.add("has-cover");
+        }
+      })
+      .catch(function () {});
 
-async function initReviews() {
-  const section = document.getElementById("reviews");
-  const track = document.getElementById("review-track");
-  let reviews = [];
-  try { reviews = await Site.loadJSON("reviews"); } catch (e) { console.error(e); }
-  if (!reviews.length) return;
-  section.hidden = false;
+    function open() {
+      grid.innerHTML = "";
+      if (images.length === 0) {
+        emptyMsg.hidden = false;
+      } else {
+        emptyMsg.hidden = true;
+        images.forEach(function (src) {
+          var cell = document.createElement("div");
+          cell.className = "overlay-cell";
+          var img = document.createElement("img");
+          img.src = App.root() + src;
+          img.alt = App.t("gallery.title");
+          img.loading = "lazy";
+          cell.appendChild(img);
+          grid.appendChild(cell);
+        });
+      }
+      overlay.hidden = false;
+      document.body.style.overflow = "hidden";
+      closeBtn.focus();
+    }
 
-  reviews.forEach((r) => {
-    const card = document.createElement("article");
-    card.className = "review";
-    card.innerHTML = `
-      <div class="stars" role="img" aria-label="">★★★★★</div>
-      <p class="review-text"></p>
-      <button type="button" class="review-toggle" hidden></button>
-      <p class="review-name"></p>`;
-    card.querySelector(".review-name").textContent = r.name;
-    card.reviewText = r.text;
-    track.appendChild(card);
-  });
+    function close() {
+      overlay.hidden = true;
+      document.body.style.overflow = "";
+      banner.focus();
+    }
 
-  const cards = [...track.children];
-  let index = 0;
-
-  const show = (i) => {
-    index = (i + cards.length) % cards.length;
-    track.style.transform = `translateX(-${index * 100}%)`;
-  };
-
-  const updateToggles = () => {
-    cards.forEach((card) => {
-      const text = card.querySelector(".review-text");
-      const btn = card.querySelector(".review-toggle");
-      const expanded = text.classList.contains("expanded");
-      text.classList.remove("expanded");
-      const overflowing = text.scrollHeight > text.clientHeight + 1;
-      if (expanded) text.classList.add("expanded");
-      btn.hidden = !overflowing && !expanded;
-      btn.textContent = Site.t(expanded ? "reviews.less" : "reviews.more");
+    banner.addEventListener("click", open);
+    closeBtn.addEventListener("click", close);
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) close();
     });
-  };
-
-  cards.forEach((card) => {
-    const text = card.querySelector(".review-text");
-    card.querySelector(".review-toggle").addEventListener("click", () => {
-      text.classList.toggle("expanded");
-      updateToggles();
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !overlay.hidden) close();
     });
-  });
+  }
 
-  const labels = () => {
-    cards.forEach((card) => {
-      const msg = card.reviewText;
-      card.querySelector(".review-text").textContent = typeof msg === "string" ? msg : Site.pick(msg);
+  var STAR =
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5L2.6 9.4l6.5-.9z"/></svg>';
+
+  function initReviews() {
+    var section = document.getElementById("reviews");
+    var track = document.getElementById("slider-track");
+    var prev = document.getElementById("rev-prev");
+    var next = document.getElementById("rev-next");
+    if (!section || !track) return;
+    var reviews = [];
+    var index = 0;
+
+    function go(i) {
+      index = (i + reviews.length) % reviews.length;
+      track.style.transform = "translateX(-" + index * 100 + "%)";
+    }
+
+    function checkOverflow() {
+      track.querySelectorAll(".slide").forEach(function (slide) {
+        var quote = slide.querySelector(".review-text");
+        var more = slide.querySelector(".review-more");
+        if (quote.classList.contains("expanded")) {
+          more.hidden = false;
+          return;
+        }
+        more.hidden = quote.scrollHeight <= quote.clientHeight + 1;
+      });
+    }
+
+    function render() {
+      track.innerHTML = "";
+      reviews.forEach(function (rev) {
+        var slide = App.el("div", "slide");
+        var card = App.el("figure", "review-card");
+
+        var stars = App.el("div", "stars");
+        stars.setAttribute("role", "img");
+        stars.setAttribute("aria-label", App.t("reviews.stars"));
+        for (var s = 0; s < 5; s++) stars.innerHTML += STAR;
+
+        var quote = App.el("blockquote", "review-text", App.text(rev.text));
+
+        var more = App.el("button", "review-more", App.t("reviews.more"));
+        more.type = "button";
+        more.hidden = true;
+        more.addEventListener("click", function () {
+          var expanded = quote.classList.toggle("expanded");
+          more.textContent = App.t(expanded ? "reviews.less" : "reviews.more");
+        });
+
+        card.appendChild(stars);
+        card.appendChild(quote);
+        card.appendChild(more);
+        card.appendChild(App.el("figcaption", "review-name", rev.name || ""));
+        slide.appendChild(card);
+        track.appendChild(slide);
+      });
+      go(index);
+      requestAnimationFrame(checkOverflow);
+    }
+
+    App.fetchJSON("src/data/reviews.json")
+      .then(function (data) {
+        reviews = Array.isArray(data) ? data : [];
+        if (reviews.length === 0) {
+          section.hidden = true;
+          return;
+        }
+        section.hidden = false;
+        render();
+        document.addEventListener("langchange", render);
+      })
+      .catch(function () {
+        section.hidden = true;
+      });
+
+    prev.addEventListener("click", function () {
+      go(index - 1);
     });
-    section.querySelectorAll(".stars").forEach((s) => s.setAttribute("aria-label", Site.t("reviews.stars")));
-    updateToggles();
-  };
-  labels();
-  Site.onLangChange(labels);
-  window.addEventListener("resize", updateToggles);
+    next.addEventListener("click", function () {
+      go(index + 1);
+    });
 
-  document.getElementById("review-prev").addEventListener("click", () => show(index - 1));
-  document.getElementById("review-next").addEventListener("click", () => show(index + 1));
+    var startX = null;
+    track.addEventListener(
+      "touchstart",
+      function (e) {
+        startX = e.touches[0].clientX;
+      },
+      { passive: true }
+    );
+    track.addEventListener("touchend", function (e) {
+      if (startX == null) return;
+      var dx = e.changedTouches[0].clientX - startX;
+      if (dx > 40) go(index - 1);
+      else if (dx < -40) go(index + 1);
+      startX = null;
+    });
 
-  let startX = null;
-  track.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
-  track.addEventListener("touchend", (e) => {
-    if (startX === null) return;
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 40) show(index + (dx < 0 ? 1 : -1));
-    startX = null;
-  });
-}
+    var resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(checkOverflow, 150);
+    });
+  }
+
+  function init() {
+    initHero();
+    initAnnouncement();
+    initGallery();
+    initReviews();
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();

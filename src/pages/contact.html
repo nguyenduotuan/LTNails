@@ -1,29 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kontakt</title>
-  <link rel="stylesheet" href="../styles/main.css">
-</head>
-<body data-page="contact" data-root="../../" data-title-key="nav.contact">
-  <header id="site-header" class="site-header"></header>
-
-  <main class="section">
-    <div class="container">
-      <h1 class="section-title" data-i18n="contact.title"></h1>
-      <p class="lead" data-i18n="contact.intro"></p>
-      <div class="contact" data-contact></div>
-      <div class="btn-row">
-        <a class="btn" data-book data-i18n="book.cta" href="#" hidden></a>
-        <a class="btn" data-call data-i18n="contact.call" href="#"></a>
-      </div>
-    </div>
-  </main>
-
-  <footer id="site-footer" class="site-footer"></footer>
-
-  <script src="../scripts/translations.js"></script>
-  <script src="../scripts/common.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kontakt – L&amp;T Nails</title>
+    <meta name="description" content="Kontakt und Öffnungszeiten von L&amp;T Nails – Nagelstudio in Nürnberg.">
+    <link rel="stylesheet" href="../../src/styles/main.css">
+  </head>
+  <body data-page="contact" data-root="../../">
+    <header id="site-header"></header>
+    <main class="page">
+      <h1 class="page-title" data-i18n="contact.title"></h1>
+      <p class="page-intro" data-i18n="contact.intro"></p>
+      <div class="contact-block" id="contact-block"></div>
+      <p class="page-cta">
+        <a class="btn" id="contact-book" data-i18n="book.cta" href="#" target="_blank" rel="noopener noreferrer" hidden></a>
+        <a class="btn" id="contact-call" data-i18n="contact.call" href="#"></a>
+      </p>
+    </main>
+    <footer id="site-footer"></footer>
+    <script src="../../src/scripts/translations.js"></script>
+    <script src="../../src/scripts/common.js"></script>
+  </body>
 </html>

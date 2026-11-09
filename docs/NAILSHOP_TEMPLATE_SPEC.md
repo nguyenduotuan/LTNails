@@ -30,11 +30,12 @@ Overrides:
 
 Rules for the agent:
 
-1. **Step-by-step interactive workflow**: The agent must develop the site incrementally and ask the user at each distinct step for either required data or design/content input before proceeding to the next step. Do not build everything silently in one batch. Follow the development steps outlined below.
-2. Apply every override. Anything not overridden uses the defaults below.
-3. If an override is contradictory or data is missing at any step, ask the user specifically.
-4. Do not add features outside this spec, and never add the excluded features below.
-5. Finish by running the validation checklist and reporting what you could not verify (e.g. visual checks).
+1. **Complete intake for a new project**: When asked to use this spec for a new project, collect the information in every step below unless the user has already explicitly provided it or says to use a default. Ask about optional features too, so the user can choose them or decline them; do not silently assume an optional feature is unwanted. The Overrides block above is only an example, not project data.
+2. **Step-by-step interactive workflow**: Work incrementally. At each step, ask for all inputs for that step that the user has not already supplied, then wait for the user's response before implementing or moving to the next step. Do not build everything silently in one batch. Follow the development steps outlined below.
+3. Apply every override. If an answer is contradictory or unclear, ask the user to resolve it rather than guessing.
+4. If the user explicitly asks to skip questions or use the defaults, follow that direction and clearly identify any remaining placeholders.
+5. Do not add features outside this spec, and never add the excluded features below.
+6. Finish by running the validation checklist and reporting what you could not verify (e.g. visual checks).
 
 ---
 
@@ -44,11 +45,13 @@ At each step, the agent must inspect current state, ask the user for any needed 
 
 1. **Step 1 — Shop identity & contact**:
    - Ask or verify: studio name, phone number, physical address, 7-day opening hours.
-   - Ask for optional links: social media profiles (Instagram, Facebook, TikTok) and external booking link (Planity, Treatwell, etc.). Strip URL tracking parameters (`igsh`, `utm_*`).
+   - Ask for optional contact links: email, social profiles (Instagram, Facebook, TikTok), map URL, and an external booking page (Planity, Treatwell, etc.). Ask whether there are other official links the user wants included; if so, add an appropriate data field and render it as a safe, accessible link.
+   - Strip URL tracking parameters (`igsh`, `utm_*`, `fbclid`) from social URLs. For external links, allow only `https://` and open in a new tab with `rel="noopener noreferrer"`.
    - Update `src/data/shop.json`, page titles, and header brand references.
 
 2. **Step 2 — Services & scope beyond nails**:
    - Ask whether the salon offers services beyond nail care (lashes, eyebrows, waxing, massages, facials, etc.).
+   - Ask which services and prices should appear; do not invent prices. Use clearly marked placeholders only if the user agrees.
    - Adapt `hero.eyebrow`, `hero.tagline`, and `about.text` across all supported languages in `src/scripts/translations.js`.
    - Update `src/data/prices.json` with service categories and items (or collect price inputs).
 
@@ -57,7 +60,7 @@ At each step, the agent must inspect current state, ask the user for any needed 
    - Clean filenames to URL-safe names (e.g., `nails-01.png`), pick a suitable landscape `cover.png` for the gallery banner, and populate `src/data/gallery.json`.
 
 4. **Step 4 — Customer reviews**:
-   - Ask for real 5-star customer reviews from the web or Google Maps (or collect pasted review texts and reviewer names).
+   - Ask for real customer review text, reviewer names, and a source link or permission to look them up. If the source cannot be accessed or verified, ask the user to paste the reviews; never invent or paraphrase reviews as real. Include only reviews the user selects.
    - Provide translations across all active languages in `src/data/reviews.json` (`text` as `{ "de", "en", "vi" }`).
 
 5. **Step 5 — Theming & styling**:

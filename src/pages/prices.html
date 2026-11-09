@@ -1,31 +1,22 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Preisliste</title>
-  <link rel="stylesheet" href="../styles/main.css">
-</head>
-<body data-page="prices" data-root="../../" data-title-key="nav.prices">
-  <header id="site-header" class="site-header"></header>
-
-  <main class="section">
-    <div class="container">
-      <h1 class="section-title" data-i18n="prices.title"></h1>
-      <p class="lead" data-i18n="prices.intro"></p>
-      <p id="price-empty" data-i18n="prices.empty" hidden></p>
-      <div id="price-list"></div>
-      <div class="btn-row">
-        <a class="btn" data-book data-i18n="book.cta" href="#" hidden></a>
-        <a class="btn" data-call data-i18n="contact.call" href="#"></a>
-      </div>
-    </div>
-  </main>
-
-  <footer id="site-footer" class="site-footer"></footer>
-
-  <script src="../scripts/translations.js"></script>
-  <script src="../scripts/common.js"></script>
-  <script src="../scripts/prices.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Preisliste – L&amp;T Nails</title>
+    <meta name="description" content="Preisliste von L&amp;T Nails – Nagelstudio in Nürnberg.">
+    <link rel="stylesheet" href="../../src/styles/main.css">
+  </head>
+  <body data-page="prices" data-root="../../">
+    <header id="site-header"></header>
+    <main class="page">
+      <h1 class="page-title" data-i18n="prices.title"></h1>
+      <p class="page-intro" data-i18n="prices.intro"></p>
+      <div id="prices"></div>
+    </main>
+    <footer id="site-footer"></footer>
+    <script src="../../src/scripts/translations.js"></script>
+    <script src="../../src/scripts/common.js"></script>
+    <script src="../../src/scripts/prices.js"></script>
+  </body>
 </html>
